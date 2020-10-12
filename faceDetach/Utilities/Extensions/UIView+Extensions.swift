@@ -22,63 +22,73 @@ extension UIView {
 }
 
 extension UIView {
-    func anchor(top: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?,
-                bottom: NSLayoutYAxisAnchor?, right: NSLayoutXAxisAnchor?,
-                paddingTop: CGFloat, paddingLeft: CGFloat, paddingBottom: CGFloat,
-                paddingRight: CGFloat, width: CGFloat = 0, height: CGFloat = 0) {
+    func anchor(top: NSLayoutYAxisAnchor? = nil,
+                left: NSLayoutXAxisAnchor? = nil,
+                bottom: NSLayoutYAxisAnchor? = nil,
+                right: NSLayoutXAxisAnchor? = nil,
+                paddingTop: CGFloat = 0,
+                paddingLeft: CGFloat = 0,
+                paddingBottom: CGFloat = 0,
+                paddingRight: CGFloat = 0,
+                width: CGFloat? = nil,
+                height: CGFloat? = nil) {
         
-        self.translatesAutoresizingMaskIntoConstraints = false
+        translatesAutoresizingMaskIntoConstraints = false
         
         if let top = top {
-            self.topAnchor.constraint(equalTo: top, constant: paddingTop).isActive = true
+            topAnchor.constraint(equalTo: top, constant: paddingTop).isActive = true
         }
         
         if let left = left {
-            self.leftAnchor.constraint(equalTo: left, constant: paddingLeft).isActive = true
+            leftAnchor.constraint(equalTo: left, constant: paddingLeft).isActive = true
         }
         
         if let bottom = bottom {
-            self.bottomAnchor.constraint(equalTo: bottom, constant: paddingBottom).isActive = true
+            bottomAnchor.constraint(equalTo: bottom, constant: -paddingBottom).isActive = true
         }
         
         if let right = right {
-            self.rightAnchor.constraint(equalTo: right, constant: -paddingRight).isActive = true
+            rightAnchor.constraint(equalTo: right, constant: -paddingRight).isActive = true
         }
         
-        if width != 0 {
-            self.widthAnchor.constraint(equalToConstant: width).isActive = true
+        if let width = width {
+            widthAnchor.constraint(equalToConstant: width).isActive = true
         }
         
-        if height != 0 {
-            self.heightAnchor.constraint(equalToConstant: height).isActive = true
+        if let height = height {
+            heightAnchor.constraint(equalToConstant: height).isActive = true
         }
     }
     
-    var safeTopAnchor: NSLayoutYAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide.topAnchor
-        }
-        return topAnchor
+    func centerX(inView view: UIView) {
+        translatesAutoresizingMaskIntoConstraints = false
+        centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
-    var safeLeftAnchor: NSLayoutXAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide.leftAnchor
+    func centerY(inView view: UIView, leftAnchor: NSLayoutXAxisAnchor? = nil,
+                 paddingLeft: CGFloat = 0, constant: CGFloat = 0) {
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: constant).isActive = true
+        
+        if let left = leftAnchor {
+            anchor(left: left, paddingLeft: paddingLeft)
         }
-        return leftAnchor
     }
     
-    var safeBottomAnchor: NSLayoutYAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide.bottomAnchor
-        }
-        return bottomAnchor
+    func setDimensions(height: CGFloat, width: CGFloat) {
+        translatesAutoresizingMaskIntoConstraints = false
+        heightAnchor.constraint(equalToConstant: height).isActive = true
+        widthAnchor.constraint(equalToConstant: width).isActive = true
     }
     
-    var safeRightAnchor: NSLayoutXAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide.rightAnchor
-        }
-        return rightAnchor
+    func setHeight(height: CGFloat) {
+        translatesAutoresizingMaskIntoConstraints = false
+        heightAnchor.constraint(equalToConstant: height).isActive = true
+    }
+    
+    func setWidth(width: CGFloat) {
+        translatesAutoresizingMaskIntoConstraints = false
+        widthAnchor.constraint(equalToConstant: width).isActive = true
     }
 }
