@@ -48,12 +48,15 @@ class CustomCameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     // MARK: - Private Methods
     private func setupUI() {
         
-        view.addSubviews(backButton, takePhotoButton)
         
-        takePhotoButton.makeConstraints(top: nil, left: nil, right: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 15, width: 80, height: 80)
-        takePhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        view.addSubview(takePhotoButton)
+        takePhotoButton.anchor(bottom:view.safeAreaLayoutGuide.bottomAnchor,paddingBottom: 15)
+        takePhotoButton.setDimensions(height: 80, width: 80)
+        takePhotoButton.centerX(inView: view)
         
-        backButton.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: nil, right: view.rightAnchor, bottom: nil, topMargin: 15, leftMargin: 0, rightMargin: 10, bottomMargin: 0, width: 50, height: 50)
+        view.addSubview(backButton)
+        backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor,right: view.rightAnchor,paddingTop: 15,paddingRight: 10)
+        backButton.setDimensions(height: 50, width: 50)
     }
     
     private func openCamera() {
@@ -184,7 +187,7 @@ extension CustomCameraController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 if let results = request.results as? [VNFaceObservation] {
                     self.handleFaceDetectionResults(results)
                 } else {
-                    self.clearDrawings()
+                    self.clearDrawings()   
                 }
             }
         })
@@ -218,6 +221,11 @@ extension CustomCameraController: AVCaptureVideoDataOutputSampleBufferDelegate {
         })
         facesBoundingBoxes.forEach({ faceBoundingBox in self.view.layer.addSublayer(faceBoundingBox) })
         self.drawings = facesBoundingBoxes
+        if facesBoundingBoxes.count == 0{
+            isOK = false
+            isOKLeft = false
+            isOKRight = false
+        }
  
     }
     
@@ -267,7 +275,7 @@ extension CustomCameraController: AVCaptureVideoDataOutputSampleBufferDelegate {
         let eyeDrawing = CAShapeLayer()
         eyeDrawing.path = eyePath
         eyeDrawing.fillColor = UIColor.clear.cgColor
-        eyeDrawing.strokeColor = UIColor.green.cgColor
+//        eyeDrawing.strokeColor = UIColor.green.cgColor
   
         return eyeDrawing
     }
